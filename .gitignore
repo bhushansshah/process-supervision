@@ -1,0 +1,15 @@
+dataset_exploration
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+.env
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
