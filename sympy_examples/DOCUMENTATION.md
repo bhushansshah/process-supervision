@@ -761,3 +761,105 @@ sympy_examples/
 ```
 
 ## Total: 30 example files covering 10 math domains
+
+---
+
+## 12. SymPy Capabilities by Math Domain — Brief Overview
+
+### 1. Applied Mathematics
+
+SymPy transforms natural-language word problems into symbolic equations and solves them in one call with `solve()`. It supports multi-variable systems, optimization via differentiation, and exact rational arithmetic (no floating-point rounding errors). The `sympy.stats` module provides a full symbolic probability and statistics engine: you can define random variables from named distributions (Normal, Binomial, Poisson, Uniform, Exponential, etc.) and query them for exact expected values, variances, and event probabilities — all symbolically. Counting methods (permutations, combinations, factorials, binomial coefficients) are first-class functions that work both numerically and with symbolic parameters.
+
+**Strengths:** Exact arithmetic, automatic equation solving, symbolic probability queries, closed-form summation of combinatorial identities.
+
+**Limitations:** Statistical inference (hypothesis testing, regression) is not a SymPy strength — use `scipy.stats` or `statsmodels` for that. Numerical simulation (Monte Carlo) is also out of scope.
+
+---
+
+### 2. Algebra (Prealgebra through Intermediate)
+
+SymPy excels at algebraic manipulation. It can expand, factor, simplify, collect, and cancel any rational expression. Equation solving covers linear, quadratic, polynomial, rational, and transcendental equations, including systems of non-linear equations. Inequalities are solved symbolically, returning interval-based solutions. Polynomial operations include long division with quotient/remainder, root-finding (with multiplicities), discriminant analysis, and polynomial GCD/LCM. Sequences and series get closed-form sums, Taylor/Maclaurin expansions, and access to named sequences (Fibonacci, Lucas). Exponential and logarithmic manipulations are fully supported, including growth/decay models, compound interest, and log-property simplification. Complex number arithmetic is native, with polar form, Euler's formula, roots of unity, and De Moivre's theorem all built in.
+
+**Strengths:** Exact symbolic manipulation, automatic factoring of high-degree polynomials, inequality solving with interval output, Taylor series to arbitrary order, seamless complex number support.
+
+**Limitations:** Very large polynomial systems (hundreds of variables) can be slow. Some transcendental equations may not have closed-form solutions and SymPy will return implicit or empty results.
+
+---
+
+### 3. Linear Algebra
+
+SymPy provides a `Matrix` class with complete linear algebra support. Operations include addition, multiplication, transpose, determinant, inverse, row echelon form (RREF), rank, null space, column space, row space, eigenvalue/eigenvector decomposition, diagonalization, Jordan normal form, and solving linear systems `Ax = b`. Vectors can be manipulated via `Matrix` or the dedicated `sympy.vector` module (with `CoordSys3D` for symbolic 3D vector calculus). All computations are exact — eigenvalues are returned as symbolic roots, not floating-point approximations. Linear transformations (rotation, scaling, reflection, shear) are naturally represented as matrices, and change-of-basis transformations are straightforward.
+
+**Strengths:** Exact symbolic eigenvalues (no numerical rounding), RREF with pivot tracking, null/column/row space computation, Cramer's rule, diagonalization with verification.
+
+**Limitations:** For large numerical matrices (thousands of rows), NumPy/SciPy are orders of magnitude faster. SymPy matrices are designed for symbolic and small-to-medium exact computations.
+
+---
+
+### 4. Abstract Algebra
+
+SymPy's `sympy.combinatorics` module provides tools for permutation groups and basic group theory. You can create permutations in array or cycle notation, compose them, find inverses, and compute orders. Named groups are available: Symmetric (`S_n`), Alternating (`A_n`), Cyclic (`Z_n`), and Dihedral (`D_n`). Group properties such as abelianness, cyclicity, and order are queryable. Subgroup testing and Lagrange's theorem verification are supported. Permutation groups also support coset enumeration and stabilizer computation.
+
+**Strengths:** Full permutation group arithmetic, named group constructors, property queries (abelian, cyclic), subgroup and order computation.
+
+**Limitations:** SymPy does not have built-in support for general abstract rings, fields, or Galois theory beyond what can be done with polynomial rings. For advanced computational algebra (Groebner bases over rings, module theory), libraries like SageMath or GAP are more appropriate.
+
+---
+
+### 5. Discrete Mathematics
+
+SymPy covers combinatorics and logic comprehensively. Combinatorial functions include integer partitions, Bell numbers (set partitions), Catalan numbers, Stirling numbers (both kinds), Bernoulli numbers, harmonic numbers, derangements (subfactorials), and multinomial coefficients. The `sympy.logic` module provides propositional logic with `And`, `Or`, `Not`, `Implies`, `Equivalent`, and `Xor`. You can convert expressions to CNF/DNF, generate truth tables, check satisfiability (SAT), detect tautologies/contradictions, and construct expressions from minterms/maxterms (SOP/POS forms).
+
+**Strengths:** Rich library of named combinatorial sequences, exact computation of partition numbers, full propositional logic engine with SAT solving, CNF/DNF normal form conversion.
+
+**Limitations:** Graph theory is minimal in SymPy — for graph algorithms (shortest path, flow, coloring), use NetworkX. First-order logic and predicate logic are not supported. The SAT solver is basic compared to dedicated solvers like Z3.
+
+---
+
+### 6. Geometry
+
+SymPy's `sympy.geometry` module provides a full 2D computational geometry engine. Geometric objects include `Point`, `Line`, `Ray`, `Segment`, `Circle`, `Triangle`, `Polygon`, and `RegularPolygon`, each with rich methods: distance, intersection, containment, tangent lines, angle measurement, area, perimeter, and geometric predicates (collinearity, concurrency, parallelism, perpendicularity). Triangles support all four centers (centroid, circumcenter, incenter, orthocenter), incircle/circumcircle, similarity testing, and the Euler line. For solid geometry, symbolic formulas for all standard 3D shapes (sphere, cylinder, cone, pyramid, torus, tetrahedron) can be built and evaluated. Differential geometry is supported through symbolic differentiation: curvature of plane/parametric curves, arc length, Frenet-Serret frames for 3D curves, and Gaussian curvature of surfaces.
+
+**Strengths:** Exact symbolic geometry (no numerical error), intersection algorithms, tangent line computation, triangle center analysis, curvature and arc length via calculus.
+
+**Limitations:** No built-in 3D geometry objects (no `Sphere`, `Plane` classes with methods like 2D). Non-Euclidean geometry (hyperbolic/spherical) has no dedicated module — you would encode it manually using differential geometry tools. Visualization requires matplotlib separately.
+
+---
+
+### 7. Number Theory
+
+SymPy has one of the most complete number theory modules among Python libraries. Core functions include: primality testing (`isprime`), prime generation (`primerange`, `nextprime`, `prevprime`), prime counting (`primepi`), integer factorization (`factorint`), divisor enumeration (`divisors`, `divisor_count`, `divisor_sigma`), Euler's totient function (`totient`), Mobius function (`mobius`), modular inverse (`mod_inverse`), Chinese Remainder Theorem (`crt`), primitive roots, and the extended Euclidean algorithm (`gcdex` for Bezout coefficients). GCD and LCM work on both integers and polynomials. The Sieve of Eratosthenes is built in for efficient prime enumeration.
+
+**Strengths:** Fast primality testing, complete factorization, CRT solver, modular arithmetic suite, Bezout identity, rich divisor function library, works with arbitrarily large integers.
+
+**Limitations:** Factorization of very large semiprimes (hundreds of digits) is computationally hard regardless of library. For advanced algebraic number theory (class groups, elliptic curves over finite fields), SageMath is more appropriate.
+
+---
+
+### 8. Precalculus
+
+SymPy handles all standard precalculus topics. Functions can be defined as symbolic expressions or `Lambda` objects, with support for composition, inverse computation (by solving `y = f(x)` for `x`), domain analysis (finding excluded values via `solveset`), and even/odd classification. Piecewise functions are first-class objects. The `limit()` function is one of SymPy's strongest features — it handles all indeterminate forms (0/0, infinity/infinity, 0*infinity, 1^infinity, 0^0, infinity^0) automatically, including one-sided limits, without the user needing to invoke L'Hopital's rule manually. Trigonometric functions support exact evaluation at standard angles, identity verification, expansion/simplification (`trigsimp`, `expand_trig`), and equation solving that returns general solutions (with integer parameter `n`).
+
+**Strengths:** Automatic limit computation handling all edge cases, exact trig values, identity simplification engine, general trig equation solutions, symbolic domain analysis.
+
+**Limitations:** Graphing/plotting requires `matplotlib` integration. SymPy's `plot()` is basic — for publication-quality plots, use matplotlib directly.
+
+---
+
+### 9. Calculus
+
+SymPy provides complete symbolic calculus. Differentiation with `diff()` handles all rules automatically (power, product, quotient, chain), supports higher-order and partial derivatives, and can do implicit differentiation via `Function` objects. Integration with `integrate()` covers indefinite and definite integrals, improper integrals (limits at infinity), and automatically applies substitution, integration by parts, partial fractions, and trigonometric substitution. The Gaussian integral (integral of e^(-x^2)) evaluates to sqrt(pi) exactly. For multivariable calculus, SymPy computes gradients, Hessian matrices, Jacobians, double/triple integrals (including polar and spherical coordinates), Lagrange multiplier optimization, and vector calculus operations (divergence, curl). Taylor/Maclaurin series expansion to arbitrary order is built in.
+
+**Strengths:** Exact symbolic integration (returns closed-form antiderivatives), automatic technique selection for integration, multivariable support (partial derivatives, multiple integrals, Jacobians), Lagrange multipliers, divergence/curl, series expansion.
+
+**Limitations:** Some integrals have no closed-form solution — SymPy will return an unevaluated `Integral` object in such cases. Numerical integration should use `scipy.integrate.quad` for better performance. Very complex symbolic integrals can be slow to compute.
+
+---
+
+### 10. Differential Equations
+
+SymPy can solve a wide variety of ordinary differential equations (ODEs) and basic partial differential equations (PDEs). For ODEs, `dsolve()` handles: separable, linear (first and higher order), exact, Bernoulli, Riccati, homogeneous, and constant-coefficient equations. It returns general solutions with arbitrary constants and supports initial value problems (IVPs) via the `ics` parameter. `classify_ode()` identifies the equation type, and `checkodesol()` verifies solutions by substitution. For PDEs, `pdsolve()` solves first-order linear PDEs, and `classify_pde()` identifies the type. Classic PDEs (heat, wave, Laplace) can be verified symbolically by substituting proposed solutions and checking that the residual is zero.
+
+**Strengths:** Automatic ODE classification and solving, IVP support, solution verification, handles most textbook ODE types, symbolic PDE solution verification.
+
+**Limitations:** Only first-order PDEs can be solved directly by `pdsolve()`. For numerical ODE/PDE solving (Runge-Kutta, finite elements), use `scipy.integrate.solve_ivp` or FEniCS. Systems of ODEs have limited support — matrix exponential methods may be needed manually.
