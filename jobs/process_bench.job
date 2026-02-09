@@ -1,0 +1,19 @@
+#!/bin/bash
+#SBATCH --job-name=process_bench
+#SBATCH --output=/home/bhsshah/process-supervision/logs/process_bench_out.txt
+#SBATCH --error=/home/bhsshah/process-supervision/logs/process_bench_err.txt
+#SBATCH --time=02-00:00
+#SBATCH --mem=32000
+#SBATCH --gres=gpu:1
+
+echo "===== Job started on $(hostname) ====="
+echo "Date: $(date)"
+
+# Ensure script runs from project code directory
+cd ~/process-supervision/
+# Activate your conda environment (update name if needed)
+source ~/process-supervision/ps_experiments/bin/activate
+
+python3 exploring_process_bench.py
+echo "===== Job finished ====="
+

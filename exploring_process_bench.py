@@ -6,7 +6,8 @@ import torch.nn.functional as F
 def make_step_rewards(logits, token_masks):
     probabilities = F.softmax(logits, dim=-1)
     probabilities = probabilities * token_masks.unsqueeze(-1) # bs, seq_len, num_labels
-    
+    print("-------------------Probabilities-----------------")
+    print(probabilities)
     all_scores_res = []
     for i in range(probabilities.size(0)):
         sample = probabilities[i] # seq_len, num_labels
@@ -20,13 +21,14 @@ model_name = "Qwen/Qwen2.5-Math-7B-PRM800K"
 device = "cuda"
 
 tokenizer = AutoTokenizer.from_pretrained(model_name, trust_remote_code=True)
+print("------------Tokenizer Loaded------------")
 model = AutoModel.from_pretrained(
-    model_name, 
-    device_map=device, 
+    model_name,
+    device_map=device,
     torch_dtype=torch.bfloat16,
     trust_remote_code=True,
 ).eval()
-
+print("------------Model Loaded------------")
 
 data = {
     "system": "Please reason step by step, and put your final answer within \\boxed{}.",
@@ -39,26 +41,34 @@ data = {
     ]
 }
 
+print("----------------Query--------------")
+print(data['query'])
+print("----------------Response Steps--------------")
+for ind, step in enumerate(data['response']):
+    print(f"------------------Step {ind + 1}------------------")
+    print(step)
+
+
 messages = [
     {"role": "system", "content": data['system']},
     {"role": "user", "content": data['query']},
     {"role": "assistant", "content": "<extra_0>".join(data['response']) + "<extra_0>"},
 ]
 conversation_str = tokenizer.apply_chat_template(
-    messages, 
-    tokenize=False, 
+    messages,
+    tokenize=False,
     add_generation_prompt=False
 )
 
 input_ids = tokenizer.encode(
-    conversation_str, 
-    return_tensors="pt", 
+    conversation_str,
+    return_tensors="pt",
 ).to(model.device)
 
 outputs = model(input_ids=input_ids)
-
+print("------------------Outputs retreived-----------------")
 step_sep_id = tokenizer.encode("<extra_0>")[0]
 token_masks = (input_ids == step_sep_id)
 step_reward = make_step_rewards(outputs[0], token_masks)
+print("------------------Step rewards-----------------------")
 print(step_reward)  # [[0.9921875, 0.2333984375, 0.6796875, 0.94140625]]
-
