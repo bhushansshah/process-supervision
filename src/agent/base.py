@@ -209,7 +209,7 @@ class AgentLoop:
 
         # Build reasoning-so-far text
         reasoning_so_far = "\n\n".join(
-            f"[{s.step_type.value}] {s.content}" for s in trajectory.steps
+            f"[{s.step_type}] {s.content}" for s in trajectory.steps
         )
         # Current step = last step
         current_step = trajectory.steps[-1].content if trajectory.steps else ""

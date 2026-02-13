@@ -116,10 +116,12 @@ configs/
 ### 1. Install Python dependencies
 
 ```bash
-# Create a virtual environment and install requirements
-uv venv .venv
-source .venv/bin/activate
-uv pip install -r requirements.txt
+# Create and activate a conda environment
+conda create -n process-supervision python=3.12 pip -y
+conda activate process-supervision
+
+# Install requirements
+pip install -r requirements.txt
 ```
 
 ### 2. Start the vLLM server

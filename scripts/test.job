@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=nlg_uncertainty_opt_350m
+#SBATCH --job-name=process_supervision_pipeline_test
 #SBATCH --output=/home/bhsshah/process-supervision/logs/output_test.log
 #SBATCH --error=/home/bhsshah/process-supervision/logs/error_test.log
 #SBATCH --time=02-00:00
@@ -14,14 +14,30 @@ cd ~/process-supervision/
 
 # Activate your conda environment (update name if needed)
 source ~/miniconda3/etc/profile.d/conda.sh
-conda activate process_supervision
+conda activate process-supervision
 
-python -m vllm.entrypoint.openai.api_server \
-    --model Qwen/Qwen2.5-Math-7B-Instruct \
-    --host 0.0.0.0 \
-    --port 8000 \
-    --dtype auto \
-    --max-model-len 4096
+# Start vLLM in the background
+module load cuda/12.6
+
+vllm serve Qwen/Qwen2.5-Math-7B-Instruct --port 8000 --max-model-len 4096 &
+VLLM_PID=$!
+
+# Wait for the server to be ready
+echo "Waiting for vLLM server to start..."
+until curl -s http://localhost:8000/v1/models > /dev/null 2>&1; do
+    sleep 5
+done
+echo "vLLM server is ready."
+
+# Run the agent
+python scripts/run_single.py \
+    --config configs/qwen_7b.yaml \
+    --problem "Let $ n(\ge2) $ be a positive integer. Find the minimum $ m $, ..." \
+    --ground-truth "2318"
+
+# Clean up
+kill $VLLM_PID
+
 
 python scripts/run_single.py \
     --config configs/qwen_7b.yaml \
