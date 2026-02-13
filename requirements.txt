@@ -1,0 +1,15 @@
+# Core
+pydantic>=2.0
+pyyaml>=6.0
+httpx>=0.25
+
+# Math / computation
+sympy>=1.12
+numpy>=1.24
+
+# Dataset loading
+datasets>=2.14
+huggingface-hub>=0.17
+
+# Evaluation (optional, for sympy LaTeX parsing)
+antlr4-python3-runtime==4.11.1

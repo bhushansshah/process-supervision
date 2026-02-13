@@ -1,0 +1,29 @@
+#!/bin/bash
+#SBATCH --job-name=nlg_uncertainty_opt_350m
+#SBATCH --output=/home/bhsshah/process-supervision/logs/output_test.log
+#SBATCH --error=/home/bhsshah/process-supervision/logs/error_test.log
+#SBATCH --time=02-00:00
+#SBATCH --mem=32000
+#SBATCH --gres=gpu:1
+
+echo "===== Job started ====="
+echo "Date: $(date)"
+
+# Ensure script runs from project code directory
+cd ~/process-supervision/
+
+# Activate your conda environment (update name if needed)
+source ~/miniconda3/etc/profile.d/conda.sh
+conda activate process_supervision
+
+python -m vllm.entrypoint.openai.api_server \
+    --model Qwen/Qwen2.5-Math-7B-Instruct \
+    --host 0.0.0.0 \
+    --port 8000 \
+    --dtype auto \
+    --max-model-len 4096
+
+python scripts/run_single.py \
+    --config configs/qwen_7b.yaml \
+    --problem "Let $ n(\ge2) $ be a positive integer. Find the minimum $ m $, so that there exists $x_{ij}(1\le i ,j\le n)$ satisfying: (1)For every $1\le i ,j\le n, x_{ij}=max\{x_{i1},x_{i2},...,x_{ij}\} $ or $ x_{ij}=max\{x_{1j},x_{2j},...,x_{ij}\}.$ (2)For every $1\le i \le n$, there are at most $m$ indices $k$ with $x_{ik}=max\{x_{i1},x_{i2},...,x_{ik}\}.$ (3)For every $1\le j \le n$, there are at most $m$ indices $k$ with $x_{kj}=max\{x_{1j},x_{2j},...,x_{kj}\}.$" \
+    --ground-truth "2318"

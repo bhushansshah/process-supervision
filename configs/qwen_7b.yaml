@@ -1,0 +1,34 @@
+# Configuration for Qwen2.5-Math-7B-Instruct
+model:
+  name: "Qwen/Qwen2.5-Math-7B-Instruct"
+  api_base: "http://localhost:8000/v1"
+  api_key: "EMPTY"
+
+generation:
+  temperature: 0.0
+  top_p: 1.0
+  max_tokens: 2048
+  stop_sequences:
+    - "```output"
+
+critique:
+  enabled: true
+  frequency: 1            # critique every turn
+  after_code_only: false
+  # model: null           # reuse reasoning model for critique
+
+python_tool:
+  enabled: true
+  timeout_seconds: 30
+  allowed_modules:
+    - sympy
+    - math
+    - numpy
+    - fractions
+    - itertools
+    - functools
+    - collections
+
+max_turns: 15
+max_context_tokens: 3800
+output_dir: "results/qwen_7b"
